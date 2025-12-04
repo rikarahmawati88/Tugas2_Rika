@@ -30,7 +30,8 @@ const createMakanan= async (req, res) => {
 //Membuat instance makanan baru
     const makanan = new makananSchema ({ // Disesuaikan
         deskripsi: req.body.deskripsi,
-        asalDaerah: req.body.asalDaerah
+        asalDaerah: req.body.asalDaerah,
+        menu_id: req.body.menu_id
 })
 try{
     //Menyimpan berita baru ke database
@@ -86,6 +87,29 @@ const deleteMakananById = async (req, res) => {
         res.status(500).json({message: error})
     }
 }
+// fungsi untuk memperbarui sebagian data makanan berdasarkan id (PATCH)
+const patchMakananById = async (req, res) => {
+     try {
+    //GET collection menu berdasarkan parameter id
+        const result = await makananSchema.findById(req.params.id)
+        if(!result){
+            // Jika data makanan tidak ada pada MongoDB
+            res.status(404).json({message: "Makanan tidak ditemukan"})
+        }else{
+            // Jika data makanan ada
+            //Jika ada request perubahan asalDaerah
+            if(req.body.asalDaerah != null){
+                result.asalDaerah = req.body.asalDaerah
+            }
+            // update data makanan
+            const updateMakanan = await result.save()
+            res.status(200).json(updateMakanan)
+        }
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
+}
+
 
 // export
 module.exports = {
@@ -93,5 +117,6 @@ module.exports = {
     getMakananById,
     createMakanan,
     updateMakananById,
-    deleteMakananById
+    deleteMakananById,
+    patchMakananById
 }

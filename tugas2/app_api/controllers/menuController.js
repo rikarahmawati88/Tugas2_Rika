@@ -90,6 +90,29 @@ const deleteMenuById = async (req, res) => {
         res.status(500).json({message: error})
     }
 }
+// fungsi untuk memperbarui sebagian data menu berdasarkan id (PATCH)
+const patchMenuById = async (req, res) => {
+     try {
+    //GET collection menu berdasarkan parameter id
+        const result = await menuSchema.findById(req.params.id)
+        if(!result){
+            // Jika data menu tidak ada pada MongoDB
+            res.status(404).json({message: "Menu tidak ditemukan"})
+        }else{
+            // Jika data menu ada
+            //Jika ada request perubahan nama
+            if(req.body.nama != null){
+                result.nama = req.body.nama
+            }
+            // update data menu
+            const updateMenu = await result.save()
+            res.status(200).json(updateMenu)
+        }
+    } catch (error) {
+        res.status(500).json({message: error.message})
+    }
+}
+
 
 // export
 module.exports = {
@@ -97,5 +120,6 @@ module.exports = {
     getMenuById,
     createMenu,
     updateMenuById,
-    deleteMenuById
+    deleteMenuById,
+    patchMenuById
 }

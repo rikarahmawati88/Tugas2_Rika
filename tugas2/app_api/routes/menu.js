@@ -19,6 +19,9 @@ router.put("/:id",menuController.updateMenuById)
 // route Delete untuk menghapus data menu berdasarakan ID
 router.delete("/:id",menuController.deleteMenuById)
 
+//route PATCH untuk memperbarui sebagian data menu berdasarkan ID
+router.patch('/:id',menuController.patchMenuById)
+
 // Mengeksport router agar dpt digunakan 
 // di file lain (misal, di app.js)
 //expor module
